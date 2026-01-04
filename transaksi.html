@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaksi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- CEK LOGIN -->
+<script>
+if (localStorage.getItem("login") !== "true") {
+    window.location.href = "login.html";
+}
+</script>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand">Aplikasi Penjualan</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="transaksi.html">Transaksi</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="daftar_transaksi.html">Daftar Transaksi</a>
+                </li>
+            </ul>
+
+            <span class="navbar-text text-white me-3">
+                👤 <span id="userLogin"></span>
+            </span>
+
+            <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
+        </div>
+    </div>
+</nav>
+
+<!-- FORM -->
+<div class="container mt-4">
+    <h4>Input Transaksi Penjualan</h4>
+
+    <form id="formTransaksi">
+        <div class="mb-3">
+            <label>Nama Barang</label>
+            <input type="text" id="nama" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Jumlah</label>
+            <input type="number" id="jumlah" class="form-control" min="1" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Kategori</label>
+            <select id="kategori" class="form-control" required>
+                <option value="">-- Pilih --</option>
+                <option>Elektronik</option>
+                <option>Makanan</option>
+                <option>Pakaian</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Tanggal</label>
+            <input type="date" id="tanggal" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Simpan</button>
+        <a href="daftar_transaksi.html" class="btn btn-secondary">Daftar Transaksi</a>
+    </form>
+</div>
+
+<!-- SCRIPT -->
+<script>
+// tampilkan username
+document.getElementById("userLogin").innerText =
+    localStorage.getItem("username") || "User";
+
+// logout
+function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+
+// simpan transaksi
+document.getElementById("formTransaksi").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let nama = document.getElementById("nama").value.trim();
+    let jumlah = parseInt(document.getElementById("jumlah").value);
+    let kategori = document.getElementById("kategori").value;
+    let tanggal = document.getElementById("tanggal").value;
+
+    if (!nama || !jumlah || jumlah <= 0 || !kategori || !tanggal) {
+        alert("Semua data wajib diisi dengan benar!");
+        return;
+    }
+
+    let transaksi = {
+        nama: nama,
+        jumlah: jumlah,
+        kategori: kategori,
+        tanggal: tanggal
+    };
+
+    let data = JSON.parse(localStorage.getItem("transaksi")) || [];
+    data.push(transaksi);
+    localStorage.setItem("transaksi", JSON.stringify(data));
+
+    alert("✅ Transaksi berhasil disimpan!");
+
+    // reset form
+    this.reset();
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
